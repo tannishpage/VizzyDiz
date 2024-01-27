@@ -51,7 +51,7 @@ def convert_to_bins(freq, x, no_bins=8):
 
 
 # Opening audio file
-audio = pydub.AudioSegment.from_mp3("./test.mp3")
+audio = pydub.AudioSegment.from_mp3("./test3.mp3")
 
 
 # Coverting audio from pydub in to samples (waveform)
@@ -84,22 +84,22 @@ def update(frame):
 
     # Updating each volume bar height for each frequency
     for i, bar in enumerate(bars_blue):
-        bar.set_height(min(x[i], 150))
+        bar.set_height(min(x[i], 250))
         bar.set_facecolor('blue')
 
 
     for i, bar in enumerate(bars_green):
-        bar.set_height(min(x[i], 350))
+        bar.set_height(min(x[i], 450))
         bar.set_facecolor('green')
 
     for i, bar in enumerate(bars_red):
         bar.set_height(x[i])
         bar.set_facecolor('red')
 
-    sys.stdout.write(f"\rAnimating...{frame/15044 * 100:.2f}%")
+    sys.stdout.write(f"\rAnimating...{frame/18500 * 100:.2f}%")
 
 # Matplotlib Animator at 60fps, change save count to match length of audio file
-ani = animation.FuncAnimation(fig, update, interval=16.67, blit=False, save_count=15044)
+ani = animation.FuncAnimation(fig, update, interval=16.67, blit=False, save_count=18500)
 
 # Setting maximum y limits
 plt.ylim([-0.25, 500])
@@ -108,5 +108,5 @@ plt.axis('on')
 # Outputting animation at 60fps
 writer = animation.FFMpegWriter(
      fps=60, bitrate=1000)
-ani.save("./movie.mp4", writer=writer)
+ani.save("./movie3.mp4", writer=writer)
 print("\rAnimating...Done")
