@@ -3,7 +3,7 @@ import wave
 
 chunk = 1024  # Record in chunks of 1024 samples
 sample_format = pyaudio.paInt16  # 16 bits per sample
-channels = 2
+channels = 1
 fs = 44100  # Record at 44100 samples per second
 seconds = 3
 filename = "output.wav"
@@ -16,7 +16,7 @@ stream = p.open(format=sample_format,
                 channels=channels,
                 rate=fs,
                 frames_per_buffer=chunk,
-                input_device_index=9,
+                input_device_index=0,
                 input=True)
 
 frames = []  # Initialize array to store frames

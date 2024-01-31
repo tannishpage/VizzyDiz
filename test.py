@@ -6,6 +6,13 @@ import matplotlib.animation as animation
 import sys
 
 
+class AudioVisualizer:
+
+    def __init__(self, audio_file, sampling_frequency):
+        self._audio_file = audio_file
+        self._sampling_frequncy = sampling_frequency
+
+
 def frequency_spectrum(x, sf):
     """
     Derive frequency spectrum of a signal from time domain
