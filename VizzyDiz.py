@@ -57,26 +57,66 @@ class AudioVisualizer:
         
         return freq_bins, x_bins
 
-    def update(self, frame):
-        pass
-
-    def _load_audio(self):
+    def load_audio(self):
         self._audio = pydub.AudioSegment.from_mp3(self._audio_file)
 
-    def setup_annimation(self):
-        pass
+
+class BarVisualizer(AudioVisualizer):
+    def __init__(self, audio_file, sampling_frequency, number_of_bar_sets=3, bar_colors=((0, 0, 1), (0, 1, 0), (1, 0, 0)), bar_set_max_heights=(250, 450, 1000), no_bins=8, fig_height=19.2, fig_width=10.8):
+        super().__init__(audio_file, sampling_frequency, no_bins)
+        
+        self.number_of_bar_sets = number_of_bar_sets
+        self.bar_colors = bar_colors
+
+        self.setup_plot()
+        self.load_audio()
 
     def setup_plot(self):
         self.fig, self.ax = plt.subplots()
         self.fig.set_size_inches(19.2, 10.8) # Output at 1920x1080 Resolution
-    
-    def setup_visualizer(self):
-        pass
+        self.ax.set_facecolor(((0, 0, 0)))
+        self.fig.patch.set_facecolor((0, 0, 0))
+
+        self.bar_sets = [None for x in range(self.number_of_bar_sets)]
+
+        for bar_set in range(self.number_of_bar_sets):
+            self.bar_sets[bar_set] = self.ax.bar(range(self._no_bins), range(self._no_bins))
 
 
+    def update(self, frame):
+        start = int((frame/60) * 1000)
+        end = start + 17 # 17 to get roughly 60 fps
 
-class BarVisualizer(AudioVisualizer):
-    pass
+        # Gettin frequncy and levels
+        waves = self._audio[start:end].get_array_of_samples()
+        freq, x = self.frequency_spectrum(waves, self._sampling_frequncy)
+        freq, x = self.discretize(freq, x, no_bins=self._no_bins)
+
+        # Updating each volume bar height for each frequency
+        for bar_set_num, bar_set in enumerate(self.bar_sets):
+            for i, bar in enumerate(bar_set):
+                bar.set_height(min(x[i], 250))
+                bar.set_facecolor(self.bar_colors[bar_set_num])
+
+        sys.stdout.write(f"\rAnimating...{frame/18500 * 100:.2f}%")
+
 
 class CircularScatterVisualizer(AudioVisualizer):
     pass
+
+
+def main():
+    visualizer = BarVisualizer("./test.mp3", 32, no_bins=64)
+    ani = animation.FuncAnimation(visualizer.fig, visualizer.update, interval=16.67, blit=False, save_count=18500)
+    # Setting maximum y limits
+    plt.ylim([-0.25, 500])
+    plt.axis('on')
+
+    # Outputting animation at 60fps
+    writer = animation.FFMpegWriter(
+        fps=60, bitrate=1000)
+    ani.save("./movie3.mp4", writer=writer)
+    print("\rAnimating...Done")
+
+if __name__ == "__main__":
+    main()
