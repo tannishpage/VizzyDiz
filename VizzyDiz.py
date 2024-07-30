@@ -4,6 +4,7 @@ import pydub
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import sys
+import pygame
 
 # Generic Visualizer Parent Class, will be inherited by 
 # child classes that do more specific visualizing.
@@ -104,6 +105,18 @@ class BarVisualizer(AudioVisualizer):
 class CircularScatterVisualizer(AudioVisualizer):
     pass
 
+class PyGameTestVisualizer(AudioVisualizer):
+    def __init__(self, audio_file, sampling_frequency, no_bins=8, screen_resolution=(1280, 720)):
+        super().__init__(audio_file, sampling_frequency, no_bins)
+        pygame.init()
+        self.screen = pygame.display.set_mode(())
+        self.clock = pygame.time.Clock()
+
+        self.setup_plot()
+        self.load_audio()
+
+    def update():
+        pass
 
 def main():
     visualizer = BarVisualizer("./test.mp3", 32, no_bins=64)
