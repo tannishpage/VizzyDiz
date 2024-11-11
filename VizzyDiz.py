@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import sys
 import pygame
+from pygame import mixer
 
 # Generic Visualizer Parent Class, will be inherited by 
 # child classes that do more specific visualizing.
@@ -109,13 +110,30 @@ class PyGameTestVisualizer(AudioVisualizer):
     def __init__(self, audio_file, sampling_frequency, no_bins=8, screen_resolution=(1280, 720)):
         super().__init__(audio_file, sampling_frequency, no_bins)
         pygame.init()
+        
+        mixer.init()
+        mixer.music.load(song_loc)
+        mixer.music.set_volume(0.7)
+
         self.screen = pygame.display.set_mode(())
         self.clock = pygame.time.Clock()
 
         self.setup_plot()
         self.load_audio()
 
-    def update():
+    def update(self, screen, start, end):
+        # How to draw each frame
+        waves = self._audio[start:end].get_array_of_samples()
+        freq, x = self.frequency_spectrum(waves, self._sampling_frequncy)
+        freq, x = self.discretize(freq, x, no_bins=self._no_bins)
+
+        for i, x_val in enumerate(x):
+            if str(x_val) == 'nan':
+                continue
+            pygame.draw.circle(screen, (((x_val*1.33*random.uniform(0, 5)) % 255)//1, ((x_val*0.5*random.uniform(0, 5)) % 255)//1, ((x_val*0.78*random.uniform(0, 5)) % 255)//1 ), ((i*15 + 100, 1080 - (x_val+300) )), min( x_val, 50)+3, width=10)
+
+    def main_loop():
+        # The main loop that calls update
         pass
 
 def main():
