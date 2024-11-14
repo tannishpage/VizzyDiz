@@ -45,18 +45,26 @@ class AudioVisualizer:
         :param no_bins: the number of bars to convert to
         :returns: np.arrays containing audio freq and levels with the desired bar count
         """
-        chunck = (freq.size // no_bins) + 1 # The chunck size to average
+        chunck = freq.size + 1 - no_bins  # (freq.size // no_bins) + 1 # The chunck size to average
+        # print(freq.size, chunck)
 
         freq_bins = np.zeros(no_bins)
         x_bins = np.zeros(no_bins)
 
         start = 0
-        for i, end in enumerate(range(start, freq.size, chunck)):
-            # Averaging levels of size chunck
-            x_bins[i] = min(x[start:end].mean(), 495) # Setting 495 as the maximum level
-            freq_bins[i] = freq[start:end].mean()
-            start = end
+        end = start + chunck
+        i = 0
+        # for i, end in enumerate(range(start, freq.size, chunck)):
+        #     # Averaging levels of size chunck
+        #     x_bins[i] = min(x[start:end].mean(), 300) # Setting 495 as the maximum level
+        #     freq_bins[i] = freq[start:end].mean()
+        #     start = end
         
+        while end != freq.size:
+            x_bins[i] = min(x[start:end].mean(), 495)
+            start += 1
+            end = start + chunck
+            i += 1
         return freq_bins, x_bins
 
     def load_audio(self):
