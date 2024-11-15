@@ -11,21 +11,22 @@ from VizzyDiz import AudioVisualizer
 import os
 import platform
 from pathlib import Path
-
+# time.sleep(5)
 # Initializing pygame
 
 pydub.AudioSegment.ffmpeg = "./ffmpeg.exe"
 pydub.AudioSegment.ffprobe = "./ffprobe.exe"
 
-song_loc = "c:\\Users\\punug\\Music\\GPM\\GPM\\R3HAB & Mike Williams\\Lullaby\\R3HAB & Mike Williams - Lullaby.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ASCEND\\ILLENIUM - Gorgeous.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\CHVRCHES\\The Bones Of What You Believe\\01 The Mother We Share.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\JVNA\\Living in Hell\\JVNA - Living in Hell.mp3" #"c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ILLENIUM\\Illenium - 05. Lifeline.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Nicky Romero vs. Krewella\\Legacy (Remixes)\\Nicky Romero - Legacy (Vicetone Remix).mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Linkin Park\\Minutes to Midnight\\Linkin Park - What I've Done.mp3"
+song_loc = "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ASCEND\\ILLENIUM - Gorgeous.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\Ashes\\Illenium - Reverie (feat. King Deco).mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ASCEND\\ILLENIUM - Gorgeous.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\CHVRCHES\\The Bones Of What You Believe\\01 The Mother We Share.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\JVNA\\Living in Hell\\JVNA - Living in Hell.mp3" #"c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ILLENIUM\\Illenium - 05. Lifeline.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Nicky Romero vs. Krewella\\Legacy (Remixes)\\Nicky Romero - Legacy (Vicetone Remix).mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Linkin Park\\Minutes to Midnight\\Linkin Park - What I've Done.mp3"
 print(song_loc)
 pygame.init()
 mixer.init()
 mixer.music.load(song_loc)
 mixer.music.set_volume(0.7)
 
-screen_height = 1440
-screen_width = 2560
+
+screen_height = 1080
+screen_width = 1920
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.draw.circle(screen, (255, 255, 255), ((960, 540)), 75)
