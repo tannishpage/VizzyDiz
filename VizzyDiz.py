@@ -61,8 +61,8 @@ class AudioVisualizer:
         #     freq_bins[i] = freq[start:end].mean()
         #     start = end
         
-        while end != freq.size:
-            x_bins[i] = min(x[start:end].mean(), 495)
+        while end <= freq.size:
+            x_bins[i] = min(min(x[start:end].max(), 300)*0.08 + x[start:end].mean(), 300)
             start += 1
             end = start + chunck
             i += 1

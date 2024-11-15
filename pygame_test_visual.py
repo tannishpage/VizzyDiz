@@ -17,7 +17,7 @@ from pathlib import Path
 pydub.AudioSegment.ffmpeg = "./ffmpeg.exe"
 pydub.AudioSegment.ffprobe = "./ffprobe.exe"
 
-song_loc = "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ASCEND\\ILLENIUM - Gorgeous.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\Ashes\\Illenium - Reverie (feat. King Deco).mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ASCEND\\ILLENIUM - Gorgeous.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\CHVRCHES\\The Bones Of What You Believe\\01 The Mother We Share.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\JVNA\\Living in Hell\\JVNA - Living in Hell.mp3" #"c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ILLENIUM\\Illenium - 05. Lifeline.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Nicky Romero vs. Krewella\\Legacy (Remixes)\\Nicky Romero - Legacy (Vicetone Remix).mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Linkin Park\\Minutes to Midnight\\Linkin Park - What I've Done.mp3"
+song_loc = "c:\\Users\\punug\\Music\\GPM\\GPM\\Linkin Park\\Minutes to Midnight\\Linkin Park - What I've Done.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\Ashes\\Illenium - Reverie (feat. King Deco).mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ASCEND\\ILLENIUM - Gorgeous.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\CHVRCHES\\The Bones Of What You Believe\\01 The Mother We Share.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\JVNA\\Living in Hell\\JVNA - Living in Hell.mp3" #"c:\\Users\\punug\\Music\\GPM\\GPM\\Illenium\\ILLENIUM\\Illenium - 05. Lifeline.mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Nicky Romero vs. Krewella\\Legacy (Remixes)\\Nicky Romero - Legacy (Vicetone Remix).mp3" # "c:\\Users\\punug\\Music\\GPM\\GPM\\Linkin Park\\Minutes to Midnight\\Linkin Park - What I've Done.mp3"
 print(song_loc)
 pygame.init()
 mixer.init()
@@ -25,8 +25,8 @@ mixer.music.load(song_loc)
 mixer.music.set_volume(0.7)
 
 
-screen_height = 1080
-screen_width = 1920
+screen_height = 1440
+screen_width = 2560
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.draw.circle(screen, (255, 255, 255), ((960, 540)), 75)
@@ -69,6 +69,7 @@ def update(frame, screen, audio, start, end):
     # end = start + length # 17 to get roughly 60 fps
 
     waves = audio._audio[start:end].get_array_of_samples()
+    sample_max = max(waves)
     if len(waves) == 0:
         return
     freq, x = audio.frequency_spectrum(waves, audio._sampling_frequncy)
@@ -88,8 +89,8 @@ def update(frame, screen, audio, start, end):
     locs_top_b = [circle_locs_top[0]]
     locs_bottom_b = [circle_locs_bottom[0]]
     
-    color_b = (random.randint(0, 10), random.randint(245, 255), random.randint(245, 255))
-    color_r = (random.randint(245, 255), random.randint(40, 50), random.randint(203, 213))
+    color_b = (random.randint(0, 10)*min((sample_max/SONG_MAX)+0.1, 1), random.randint(245, 255)*min((sample_max/SONG_MAX)+0.1, 1), random.randint(245, 255)*min((sample_max/SONG_MAX)+0.1, 1))
+    color_r = (random.randint(245, 255)*min((sample_max/SONG_MAX)+0.1, 1), random.randint(40, 50)*min((sample_max/SONG_MAX)+0.1, 1), random.randint(203, 213)*min((sample_max/SONG_MAX)+0.1, 1))
         
 
     for i, x_val in enumerate(x[0:(no_bins//2)-1], 1):
@@ -102,7 +103,7 @@ def update(frame, screen, audio, start, end):
         yp = abs(y_coords_bottom[i] - CIRCLE_CENTER[1])/RADIUS
         #print(xp, yp)
         sign = sgn(x_coords[i] - CIRCLE_CENTER[0])
-        randomness = random.uniform(-1*threshold_r-0.5, -1*threshold_r)
+        randomness = random.uniform(-1*threshold_b-0.25, -1*threshold_b)
         locs_bottom_b.append((x_coords[i] + randomness*sign*x_val*xp, y_coords_bottom[i] + x_val*threshold_b*randomness*yp))
 
     for i, x_val in enumerate(x[(no_bins//2 + 1):-1], (no_bins//2 + 1)+1):
@@ -113,7 +114,7 @@ def update(frame, screen, audio, start, end):
         yp = abs(y_coords_bottom[i - (no_bins//2 + 1)] - CIRCLE_CENTER[1])/RADIUS
         #print(xp, yp)
         sign = sign = sgn(x_coords[i - (no_bins//2 + 1)] - CIRCLE_CENTER[0])
-        randomness = random.uniform(-1*threshold_r-0.5, -1*threshold_r)
+        randomness = random.uniform(-1*threshold_b-0.25, -1*threshold_b)
         locs_top_b.append((x_coords[i - (no_bins//2 + 1)] + randomness*sign*x_val*xp, y_coords_top[i - (no_bins//2 + 1)] - x_val*threshold_b*randomness*yp))
         
 
@@ -127,7 +128,7 @@ def update(frame, screen, audio, start, end):
         yp = abs(y_coords_bottom[i] - CIRCLE_CENTER[1])/RADIUS
         #print(xp, yp)
         sign = sgn(x_coords[i] - CIRCLE_CENTER[0])
-        randomness = random.uniform(threshold_r-0.5, threshold_r)
+        randomness = random.uniform(threshold_r-0.25, threshold_r)
         locs_bottom_r.append((x_coords[i] + randomness*sign*x_val*xp, y_coords_bottom[i] + x_val*threshold_r*randomness*yp))\
 
     for i, x_val in enumerate(x[(no_bins//2 + 1):-1], (no_bins//2 + 1)+1):
@@ -138,20 +139,23 @@ def update(frame, screen, audio, start, end):
         yp = abs(y_coords_bottom[i - (no_bins//2 + 1)] - CIRCLE_CENTER[1])/RADIUS
         #print(xp, yp)
         sign = sign = sgn(x_coords[i - (no_bins//2 + 1)] - CIRCLE_CENTER[0])
-        randomness = random.uniform(threshold_r-0.5, threshold_r)
+        randomness = random.uniform(threshold_r-0.25, threshold_r)
         locs_top_r.append((x_coords[i - (no_bins//2 + 1)] + randomness*sign*x_val*xp, y_coords_top[i - (no_bins//2 + 1)] - x_val*threshold_r*randomness*yp))
         
     locs_top_r.append(circle_locs_top[-1])
     locs_bottom_r.append(circle_locs_bottom[-1])
     locs_top_b.append(circle_locs_top[-1])
     locs_bottom_b.append(circle_locs_bottom[-1])
+    
+    pygame.draw.circle(screen, (255*(sample_max/SONG_MAX), 255*(sample_max/SONG_MAX), 255*(sample_max/SONG_MAX)), ((CIRCLE_CENTER[0], CIRCLE_CENTER[1])), RADIUS*(sample_max/SONG_MAX))
         
     pygame.draw.lines(screen, color_r, False, locs_top_r, 5)
     pygame.draw.lines(screen, color_r, False, locs_bottom_r, 5)
     
     pygame.draw.lines(screen, color_b, False, locs_top_b, 5)
     pygame.draw.lines(screen, color_b, False, locs_bottom_b, 5)
-
+    
+    return (sample_max/SONG_MAX)
 
 frame = 0
 t_dif = 0.017
@@ -160,6 +164,7 @@ mixer.music.play()
 start = 0
 end = start + dt
 clock = pygame.time.Clock()
+SONG_MAX = max(audio._audio.get_array_of_samples())
 while running:
     
     start_t = time.time()
@@ -167,7 +172,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    update(frame, screen, audio, start, end)
+    vol = update(frame, screen, audio, start, end)
     # pygame.draw.lines(screen, (255, 255, 255), False, circle_locs_top, 5)
     # pygame.draw.lines(screen, (255, 255, 255), False, circle_locs_bottom, 5)
     pygame.display.flip()
@@ -177,7 +182,7 @@ while running:
     #     pygame.time.wait(9)
     # else:
     #     pygame.time.wait(10)
-    screen.fill((0,0,0))
+    screen.fill((0, 0, 0))
     end_t = time.time()
     t_dif = end_t - start_t
     dt = clock.tick(60)
