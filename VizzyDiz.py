@@ -30,10 +30,11 @@ class AudioVisualizer:
         tarr = n / float(sf)
         frqarr = k / float(tarr)  # two sides frequency range
 
-        frqarr = frqarr[range(n // 2)]  # one side frequency range
+        # frqarr = frqarr[range(n // 2)]  # one side frequency range
 
         x = fft.fft(x) / n  # fft computing and normalization
-        x = x[range(n // 2)]
+        # x = x[range(n // 2)]
+        # x = x / x.max()
 
         return frqarr, abs(x)
 
